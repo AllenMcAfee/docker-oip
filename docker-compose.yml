@@ -1,0 +1,31 @@
+
+version: "3"
+
+services:
+  oip-flo-regtest:
+    image: medici/oip-flo-regtest:latest
+    volumes:
+      - "./data:/data"
+      - "./logs:/root/logs"
+    ports:
+      - 7312:7312
+      - 7313:7313
+      - 17312:17312
+      - 17313:17313
+      - 41289:41289
+
+    environment:
+      - DATA_DIR=/data
+      - PRINTTOCONSOLE=1
+      - RPCUSER=${FLO_REGTEST_RPC_USER}
+      - RPCPASSWORD=${FLO_REGTEST_RPC_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "flo-cli getinfo || exit 1"]
+      interval: 30s
+    deploy:
+      mode: global
+
+networks:
+  default:
+    external:
+      name: "local-net"
